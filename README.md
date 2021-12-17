@@ -1,6 +1,7 @@
 **Project Système de décision**
 
-**Students **
+**Students**
+
 Ariane Dalens
 Lucas Sor
 Magali Morin
