@@ -7,12 +7,12 @@
 [Magali Morin](https://gitlab-student.centralesupelec.fr/2018morinm)
 
 #### Due date
-:calendar: **14/01/2021**
+:calendar: **14/01/2021**  
 :calendar: **01/02/2021**
 
 ## :books: Subject of the project 
 
-> To be redefined 
+> TODO: To be redefined 
 
 Consider a situation in which a committee for a higher education program has to decide about the admission of students on the basis of their evaluations in 4 courses: mathematics (M), physics (P), literature (L) and history (H). Evaluations on all courses range in the [0,20] interval. To be accepted (A) in the program, the committee considers that a student should obtain at least 12 on a “majority” of courses, otherwise, the student is refused (R). From the committee point of view, all courses (criteria) do not have the same importance. To define the required majority of courses, the committee attaches a weight wj ≥ 0 to each course such that they sum to 1; a subset of courses C ⊆ {M, P, L, H} is considered as a majority if j∈C wj ≥ λ, where λ ∈ [0, 1] is a required majority level.
 
