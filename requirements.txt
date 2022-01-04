@@ -1,0 +1,3 @@
+pandas
+numpy
+gurobipy==9.5.0
