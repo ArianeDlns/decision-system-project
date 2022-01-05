@@ -79,13 +79,15 @@ where $\varepsilon$ is a small number.
 
 Now that we have defined the boolean variables $\delta_i(s)$, we can use them to define continuous variables $w_i(s)$ for each course $i$ and for each student $s$ such that :
 
-$$ w_i(s) = 
+```math
+w_i(s) = 
 \left\{ 
     \begin{array}{l} 
         w_i, \text{ if } s_i \geq b_i \\
         0, \text{ otherwise}
     \end{array}
-\right.$$
+\right.
+```
 
 We remind ourselves that the $w_i$ are the weights attributed to course $i$ and that it is our goal to find them.
 
