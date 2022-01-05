@@ -56,9 +56,11 @@ pip3 install -r requirements.txt
 ``gurobipy==9.5.0``
 
 ## Theoretical Explanation 
+
+
 The problem statement is as follows : 
 
-We consider two sets of students $A$ (accepted) and $R$ (rejected) and that the coalitions of criteria are represented using additive weights $w_j$ and a majority threshold $\lambda$. That is to say that students are accepted if and only if the sum of the weight of their courses in which they obtain at least the minimum required mark is a majority (greater or equal to $\lambda$).
+We consider two sets of students <img src="https://render.githubusercontent.com/render/math?math=A"> (accepted) and $R$ (rejected) and that the coalitions of criteria are represented using additive weights $w_j$ and a majority threshold $\lambda$. That is to say that students are accepted if and only if the sum of the weight of their courses in which they obtain at least the minimum required mark is a majority (greater or equal to $\lambda$).
 
 Our goal is to find the weight vector $w$ and the threshold $\lambda$ using linear programming and SAT solvers.
 
