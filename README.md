@@ -145,7 +145,7 @@ To sum up, the linear programming algorithm that will allow us to find the weigh
     & w_i \in [0, 1] \\
     & \lambda \in [0,1]
 \end{array}
-```math
+```
 
 ## References 
 [1] D. Bouyssou, T. Marchant, An axiomatic approach to noncompensatory sorting methods in MCDM, I: The case of two categories, European Journal of Operational Research, 178(1):217–245,(2007).  
