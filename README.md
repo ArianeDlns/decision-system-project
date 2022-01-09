@@ -149,35 +149,35 @@ To sum up, the linear programming algorithm that will allow us to find the weigh
 
 Now, let's take a different approach. Rather than using the linear programming algorithm method, let's use the SAT-solver method.
 
-Let $`\alpha_{ki}`$ a boolean variable that is true if and only if the evaluation $`k`$ on criterion $`i`$ is above the frontier and $`\beta_C`$ a boolean variable that is true if and only if the coalition of criterion is a majority.
+Let $`\alpha_{ki}`$ a boolean variable that is true if and only if the evaluation $`k`$ on criterion $`i`$ is above the frontier and $`\beta_C`$ a boolean variable that is true if and only if the coalition of criteria is a majority.
 
 To ensure that every evaluations that are ranked above a "good" evaluation are also good, our SAT-solver should satisfy the following clause : 
 
 ```math
-\forall k' > k, \quad \alpha_{ki} \Leftarrow \alpha_{k'i} \text{ i.e. } \neg \alpha_{ki} \lor \alpha_{k'i}
+\forall k' > k, \quad \alpha_{ki} \Rightarrow \alpha_{k'i} \text{ i.e. } \neg \alpha_{ki} \lor \alpha_{k'i}
 ```
 
-In the same way, if one coalition of criterion is a majority, all coalitions of criterion that includes it should also be a majority.
+In the same way, if one coalition of criteria is a majority, all coalitions of criteria that include it should also be majorities.
 
 ```math
-\forall C \subset C', \quad \beta_C \Leftarrow \beta_{C'} \text{ i.e. } \neg \beta_C \lor \beta_{C'}
+\forall C \subset C', \quad \beta_C \Rightarrow \beta_{C'} \text{ i.e. } \neg \beta_C \lor \beta_{C'}
 ```
 
 Now, for all students that are accepted, we should write clauses that state it. Those clauses are in the form :
 
 ```math
-\forall C \subset \mathcal{N}, \quad \bigwedge\limits_{i \in C} \neg \alpha_{ki} \Leftarrow \beta_{\mathcal{N}\sim C} \text{ i.e. }  \bigvee\limits_{i \in C} \alpha_{ki} \lor \beta_{\mathcal{N}\sim C}
+\forall C \subset \mathcal{N}, \quad \bigwedge\limits_{i \in C} \neg \alpha_{ki} \Rightarrow \beta_{\mathcal{N}\setminus C} \text{ i.e. }  \bigvee\limits_{i \in C} \alpha_{ki} \lor \beta_{\mathcal{N}\setminus C}
 ```
 
-This means that the criterions in the coalition $`C`$ are not necessary to be a majority.
+This means that the criteria in the coalition $`C`$ are not necessary to be a majority.
 
 In the same way, for all students that are rejected, we also should write clauses stating it. Those clauses are in the form :
 
 ```math
-\forall C \subset \mathcal{N}, \quad \bigwedge\limits_{i \in C} \alpha_{ki} \Leftarrow \neg \beta_{C} \text{ i.e. }  \bigvee\limits_{i \in C} \neg \alpha_{ki} \lor \neg \beta_{C}
+\forall C \subset \mathcal{N}, \quad \bigwedge\limits_{i \in C} \alpha_{ki} \Rightarrow \neg \beta_{C} \text{ i.e. }  \bigvee\limits_{i \in C} \neg \alpha_{ki} \lor \neg \beta_{C}
 ```
 
-This means that the criterions in the coalition $`C`$ are not sufficient to be a majority.
+This means that the criteria in the coalition $`C`$ are not sufficient to be a majority.
 
 
 ## References 
