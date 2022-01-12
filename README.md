@@ -125,7 +125,7 @@ where $`\varepsilon'`$ is another small positive number.
 
 $`\sigma_s`$ is such that it is the positive difference between the student's sum of weight and the margin. That means that in order to have a good model and find good $`w`$ and $`\lambda`$, we must maximize the sum of all $`\sigma_s`$.
 
-To sum up, the linear programming algorithm that will allow us to find the weight vector $`w`$ and the threshold $`\lambda``$ is described by :
+To sum up, the linear programming algorithm that will allow us to find the weight vector $`w`$ and the threshold $`\lambda`$ is described by :
 
 ```math 
 \text{Max} \sum_s \sigma_s
