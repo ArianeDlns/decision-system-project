@@ -213,7 +213,7 @@ The outranking of alternatives by boundary above them :
 And finally we add another clause that will define the hierarchy of profiles amongst the different end results $`h`$.
 
 ```math
-\forall h'>h, \quad \neq \alpha_{kih} \Rightarrow \neg \alpha_{kih'} \text{ i.e. } \alpha_{kih} \lor \neg \alpha_{kih'}
+\forall h'>h, \quad \neg \alpha_{kih} \Rightarrow \neg \alpha_{kih'} \text{ i.e. } \alpha_{kih} \lor \neg \alpha_{kih'}
 ```
 
 
