@@ -28,7 +28,8 @@ Our solutions will be evaluated based on:
 ## :runner: Running the code
 
 ```bash
-python main
+python3 tests/tests.py # To run tests
+python main.py # To run the full module 
 ```
 
 ## :package: Organisation of the project
@@ -36,23 +37,29 @@ python main
 ### Structure
 
 ```bash 
-├── notebook
-│   └── generator.ipynb
-└── utils
-│   └── helpers.py
-├── tests
-│   └── tests.py
+.
 ├── MR-Sort-NCS.pdf
 ├── README.md
+├── generator.py
 ├── main.py
-└── requirements.txt
+├── models.py
+├── notebook
+│   ├── SolveurSAT.ipynb
+│   ├── generator.ipynb
+│   ├── gophersat.exe
+│   ├── gophersat.zip
+│   └── workingfile.cnf
+├── requirements.txt
+├── tests
+│   └── tests.py
+└── utils
+    └── helpers.py
 ```
 
 ### Requirements 
 ```bash
 pip3 install -r requirements.txt 
 ```
-
 ``gurobipy==9.5.0``
 
 ## Theoretical Explanation 

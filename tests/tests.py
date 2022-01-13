@@ -18,5 +18,5 @@ from models import MRSort_Solver
 MRSort_solv = MRSort_Solver(gen)
 MRSort_solv.set_constraint('MaxMin')
 MRSort_solv.solve()
-f1_score_, accuracy_, time = MRSort_solv.get_results()
+f1_score_, accuracy_, time_, error_count = MRSort_solv.get_results()
 
