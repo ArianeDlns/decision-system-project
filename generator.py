@@ -1,9 +1,9 @@
 import numpy as np
-from random import uniform
+from collections import Counter
 
 
 class GradesGenerator():
-    def __init__(self, size: int = 100, nb_classes: int = 1, nb_grades: int = 4, lbd: float = None, weights: np.ndarray = None, betas: np.ndarray = None, seed: int = None, noise: bool=False):
+    def __init__(self, size: int = 100, nb_classes: int = 1, nb_grades: int = 4, lbd: float = None, weights: np.ndarray = None, betas: np.ndarray = None, seed: int = None, noise: float = None):
         self.noise = noise
         self.seed = seed
         if seed is None:
@@ -14,13 +14,16 @@ class GradesGenerator():
         self.nb_grades = nb_grades
         if lbd is None:
             rng = np.random.default_rng(self.seed)
-            self.lbd = rng.uniform(0.3, 0.7)
+            self.lbd = rng.uniform(0.2, 0.8)
         self.weights = weights
         if weights is None:
             self.weights = self.generate_weights()
         self.betas = betas
         if betas is None:
             self.betas = self.generate_betas()
+        if noise is None:
+            rng = np.random.default_rng(self.seed)
+            self.noise = rng.uniform(0.01, 0.1)
 
     def generate_weights(self):
         """
@@ -49,9 +52,16 @@ class GradesGenerator():
         Returns :
                admissions (array<bool>) : True or False based on admission
         """
-        if self.noise is True:
-            #TODO: implement noise
-            admissions = np.array([((grade >= self.betas)*self.weights).sum() >= self.lbd for grade in grades]) 
+        if self.noise > 0:
+            print('Adding {:.2f} % of noise'.format(self.noise*100)) 
+            admissions = []
+            for grade in grades: 
+                tirage = np.random.binomial(1, self.noise)
+                if tirage:
+                    admissions += [((grade >= self.betas)*self.weights).sum() <= self.lbd]
+                else:
+                    admissions += [((grade >= self.betas)*self.weights).sum() >= self.lbd]
+            admissions = np.array(admissions)
         else: 
             admissions = np.array([((grade >= self.betas)*self.weights).sum() >= self.lbd for grade in grades])
         return admissions
@@ -67,3 +77,19 @@ class GradesGenerator():
         grades = rng.integers(low=0, high=21, size=(self.size, self.nb_grades))
         admissions = self.classifier(grades)
         return grades, admissions
+    
+    def analyze_gen(self):
+        """
+        Analyze the generator
+        Returns :
+            None
+        """
+        print('---------Analyze----------')
+        print(f"Lambda: {self.lbd}")
+        print(f"Weights: {self.weights}")
+        print(f"Betas: {self.betas}")
+        grades, admissions = self.generate_grades()
+        print(f"Got-in: {dict(Counter(admissions))}")
+        print("% Got-in: {:.2f} %".format(admissions.sum()/self.size))
+        print('--------------------------')
+        pass
