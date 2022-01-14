@@ -3,7 +3,7 @@ from collections import Counter
 
 
 class GradesGenerator():
-    def __init__(self, size: int = 100, nb_classes: int = 1, nb_grades: int = 4, lbd: float = None, weights: np.ndarray = None, betas: np.ndarray = None, seed: int = None, noise: float = None):
+    def __init__(self, size: int = 100, nb_classes: int = 1, nb_grades: int = 4, lbd: float = None, weights: np.ndarray = None, betas: np.ndarray = None, seed: int = None, noise: float = None, nb_class: int=None):
         self.noise = noise
         self.seed = seed
         if seed is None:
@@ -24,6 +24,10 @@ class GradesGenerator():
         if noise is None:
             rng = np.random.default_rng(self.seed)
             self.noise = rng.uniform(0.01, 0.1)
+        self.nb_class = nb_class
+        if nb_class is None:
+            self.nb_class = 2
+
 
     def generate_weights(self):
         """
@@ -52,6 +56,7 @@ class GradesGenerator():
         Returns :
                admissions (array<bool>) : True or False based on admission
         """
+        # TODO: adding admission based on nb_class
         if self.noise > 0:
             print('Adding {:.2f} % of noise'.format(self.noise*100)) 
             admissions = []
