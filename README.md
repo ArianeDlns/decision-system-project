@@ -12,12 +12,11 @@
 
 ## :books: Subject of the project 
 
+> Consider a situation in which a committee for a higher education program has to decide about the admission of students on the basis of their evaluations in 4 courses: mathematics ($`M`$), physics ($`P`$), literature ($`L`$) and history ($`H`$). Evaluations on all courses range in the $`[0,20]`$ interval. To be accepted ($`A`$) in the program, the committee considers that a student should obtain at least 12 on a “majority” of courses, otherwise, the student is refused ($`R`$). From the committee point of view, all courses (criteria) do not have the same importance. To define the required majority of courses, the committee attaches a weight $`w_j ≥ 0`$ to each course such that they sum to 1; a subset of courses $`C ⊆ {M, P, L, H}`$ is considered as a majority if $`\forall j∈C`$ $`w_j ≥ λ`$, where $`λ ∈ [0, 1]`$ is a required majority level.
 
-> Consider a situation in which a committee for a higher education program has to decide about the admission of students on the basis of their evaluations in 4 courses: mathematics ($`M`$), physics ($`P`$), literature ($`L`$) and history ($`H`$). Evaluations on all courses range in the $`[0,20]`$ interval. To be accepted ($`A`$) in the program, the committee considers that a student should obtain at least 12 on a “majority” of courses, otherwise, the student is refused ($`R`$). From the committee point of view, all courses (criteria) do not have the same importance. To define the required majority of courses, the committee attaches a weight $`wj ≥ 0`$ to each course such that they sum to 1; a subset of courses $`C ⊆ {M, P, L, H}`$ is considered as a majority if $`j∈C wj ≥ λ`$, where $`λ ∈ [0, 1]`$ is a required majority level.
-
-To do so we will: 
-1. implement an Inv-MR-Sort with a linear solver (gurobi) 
-2. implement a Inv-NCS  with a SAT/MaxSAT solver
+**To solve this problem we will implement:**
+1. an Inv-MR-Sort with a linear solver (gurobi) 
+2. a Inv-NCS  with a SAT/MaxSAT solver
 
 Our solutions will be evaluated based on: 
 1. computational time
@@ -39,6 +38,13 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort 
 - ``--noise`` : (default=0) - proportion of noisy data
 - ``--model`` : (default=MR-Sort) - model used either MR-Sort or SAT
 - ``--seed`` : (default=None) - seed used 
+
+### Performances 
+**Accuracy and f1-score for MR-Sort on 100 students**
+![alt text](img/scores_MR-Sort.png?raw=true "Title")
+
+**Timing for MR-Sort on 100 students**
+![alt text](img/time_MR-Sort.png?raw=true "Title")
 
 ## :package: Organisation of the project
 
