@@ -414,6 +414,7 @@ class SAT_Solver:
             f1_score_ (float): f1-score of the solution
             accuracy_ (float): accuracy of the solution
             time (float): time spent trying to find the optimum
+            error_count (int): 1/0 based on if gurobi converges or not 
         """
             
         
@@ -438,6 +439,7 @@ class SAT_Solver:
 
             accuracy_ = accuracy_score(admissions,predicted)
             f1_score_ = f1_score(admissions,predicted, average='macro')
+            error_rate = sum(admissions != predicted)
         else:
             predicted = []
             for student in grades:
@@ -462,13 +464,15 @@ class SAT_Solver:
 
             accuracy_ = accuracy_score(admissions,predicted)
             f1_score_ = f1_score(admissions,predicted, average='macro')
+            error_rate = sum(admissions != predicted)
 
         print("Runed in: {:.2f} seconds ".format(t))
         print("Precision: {:.2f} %".format(accuracy_*100))
         print("F1-score:  {:.2f} %".format(f1_score_*100))
+        print(f"Error rate: {error_rate} errors")
         
 
-        return f1_score_,accuracy_,t
+        return f1_score_,accuracy_,t, error_rate
                     
 
         
