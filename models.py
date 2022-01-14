@@ -2,7 +2,28 @@ from gurobipy import *
 import time
 import numpy as np
 from collections import Counter
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, accuracy_score
+from itertools import chain
+from itertools import combinations
+import subprocess
+
+
+MAX_GRADE = 21
+
+def powerset(iterable): 
+            s = list(iterable)
+            return( chain.from_iterable(combinations(s, r) for r in range(len(s)+1)))
+
+def get_i2v(v2i_alpha, v2i_beta):
+    i2v = {}
+
+    for i in range(len(v2i_alpha)):
+        i2v[i+1] = list(v2i_alpha.keys())[list(v2i_alpha.values()).index(i+1)]
+
+    for i in range(len(v2i_beta)):
+        i2v[i+A+1] = list(v2i_beta.keys())[list(v2i_beta.values()).index(i+1+A)]
+    
+    return i2v
 
 
 class MRSort_Solver:
@@ -178,31 +199,269 @@ class MRSort_Solver:
               np.ones(self.nb_grades)) >= 0 for j in range(self.size)])
 
 class SAT_Solver:
-    def __init__(self, generator, epsilon: float = 1e-6, M: int = 1e2):
+
+    
+    
+    def __init__(self, generator):
         """
         Initialize the solver
         """
+        self.generator = generator
         pass
 
-    def init_clauses(self):
+    def init_clauses(self,grades,admissions):
         """
-        Initialize clauses
+        Initialize clauses with the grades and the admissions
         """
-        pass
+        if self.generator.nb_clause == 1: #Simple case 
+            #Variable alpha
+            alpha = []
+            for i in range(self.generator.nb_grades):
+                for k in range(MAX_GRADE):
+                    alpha.append((i,k)) # ==> donne tous les alpha i k 
+            #Dictionnaire alpha
+            v2i_alpha = {v : i+1 for i,v in enumerate(alpha)} # à chaque variable associe un nombre
+            A = len(v2i_alpha)
+            
+                 
+
+            #L'ensemble des subset 
+            s = frozenset({i for i in range(self.generator.nb_grades)})
+            subsets = list(powerset(s)) 
+
+
+            #Dictionnaire beta
+            v2i_beta = {frozenset(v) : A+i+1 for i,v in enumerate(subsets)}
+
+            #Clause 1
+            clause_1 = []
+
+            for i in range(self.generator.nb_grades):
+                for k in range(MAX_GRADE-1):
+                    for j in range(k+1,MAX_GRADE):
+                        clause_1.append([-v2i_alpha[(i,k)], v2i_alpha[(i,j)]])
+
+            #Clause 2
+            clause_2 = []
+
+            for i in subsets:
+                C_prime = frozenset(i)
+                for j in subsets:
+                    C = frozenset(j)
+                    if C.issubset(C_prime) and C != C_prime:
+                        clause_2.append([-v2i_beta[C], v2i_beta[C_prime]])
+
+            #Clause 3
+
+            clause_3 = []
+            for st_idx,student in enumerate(grades):
+                if admissions[st_idx] == 1:
+                    for c in subsets:
+                        alpha = []
+                        for i in c:
+                            alpha.append(v2i_alpha[(i,student[i])])
+                    
+                        clause_3.append(alpha+[v2i_beta[frozenset(s.difference(c))]])
+
+            #Clause 4
+
+            clause_4 = []
+
+
+            for st_idx,student in enumerate(grades):
+                if admissions[st_idx] == 0:
+                    for c in subsets:
+                        alpha = []
+                        for i in c:
+                            alpha.append(-v2i_alpha[(i,student[i])])
+                    
+                        clause_4.append(alpha+[-v2i_beta[frozenset(c)]])
+
+            self.clause = clause_1 + clause_2 + clause_3 + clause_4
+            self.i2v = get_i2v(v2i_alpha,v2i_beta)
+
+        
+
+        else: #Multi class case
+            #Variable alpha
+            alpha = []
+            for i in range(self.generator.nb_grades):
+                for k in range(MAX_GRADE):
+                    for h in range(self.generator.nb_class+1):
+                        alpha.append((i,k,h)) # ==> donne tous les alpha i k h
+
+            #Dictionnaire alpha
+            v2i_alpha = {v : i+1 for i,v in enumerate(alpha)} # à chaque variable associe un nombre
+            A = len(v2i_alpha)
+
+            #Créer l'ensemble des subset 
+
+            #L'ensemble des subset 
+            s = frozenset({i for i in range(self.generator.nb_grades)})
+            subsets = list(powerset(s)) 
+
+
+            #Dictionnaire beta
+            v2i_beta = {frozenset(v) : A+i+1 for i,v in enumerate(subsets)}
+
+            clause_1 = []
+
+            for i in range(self.generator.nb_grades):
+                for k in range(MAX_GRADE-1):
+                    for h in range(self.generator.nb_class):
+                        for j in range(k+1,MAX_GRADE):
+                            clause_1.append([-v2i_alpha[(i,k,h)], v2i_alpha[(i,j,h)]])
+
+            clause_2 = []
+
+            for i in subsets:
+                C_prime = frozenset(i)
+                for j in subsets:
+                    C = frozenset(j)
+                    if C.issubset(C_prime) and C != C_prime:
+                        clause_2.append([-v2i_beta[C], v2i_beta[C_prime]])
+
+            clause_3 = []
+
+
+            clause_3 = []
+            for st_idx,student in enumerate(grades):
+                for c in subsets:
+                    alpha = []
+                    for i in c:
+                        alpha.append(v2i_alpha[(i,student[i],admissions[st_idx])])
+                
+                    clause_3.append(alpha+[v2i_beta[frozenset(s.difference(c))]])
+
+
+            clause_4 = []
+
+            for st_idx,student in enumerate(grades):
+                if admissions[st_idx] < self.generator.nb_class:
+                    for c in subsets:
+                        alpha = []
+                        for i in c:
+                            alpha.append(-v2i_alpha[(i,student[i],admissions[st_idx]+1)])
+                    
+                        clause_4.append(alpha+[-v2i_beta[frozenset(c)]])
+
+            clause_5 = []
+
+            for k in range(MAX_GRADE):
+                for i in range(self.generator.nb_grades):
+                    for h in range(self.generator.nb_class):
+                        for j in range(h+1, self.generator.nb_class+1):
+                            clause_5.append([v2i_alpha[(i,k,h)],-v2i_alpha[(i,k,j)]])
+
+            self.clause = clause_1 + clause_2 + clause_3 + clause_4 + clause_5
+            self.i2v = get_i2v(v2i_alpha,v2i_beta)
+
+
+
+
+                
+
+
+
 
     def solve(self):
         """
         Solve SAT clauses
         """
-        pass
+        def clauses_to_dimacs(clauses,numvar) :
+            dimacs = 'c This is it\np cnf '+str(numvar)+' '+str(len(clauses))+'\n'
+            for clause in clauses :
+                for atom in clause :
+                    dimacs += str(atom) +' '
+                dimacs += '0\n'
+            return dimacs
 
-    def get_results(self):
+        def write_dimacs_file(dimacs, filename):
+            with open(filename, "w", newline="") as cnf:
+                cnf.write(dimacs)
+
+        def exec_gophersat(filename, cmd = "./gophersat.exe", encoding = "utf8") :
+            result = subprocess.run([cmd, filename], stdout=subprocess.PIPE, check=True, encoding=encoding)
+            string = str(result.stdout)
+            lines = string.splitlines()
+
+            if lines[1] != "s SATISFIABLE":
+                return False, [], {}
+
+            model = lines[2][2:].split(" ")
+
+            return True, [int(x) for x in model if int(x) != 0], { self.i2v[abs(int(v))] : int(v) > 0 for v in model if int(v)!=0} 
+
+        myClauses= self.clause
+        myDimacs = clauses_to_dimacs(myClauses,len(self.i2v))
+
+        write_dimacs_file(myDimacs,"./workingfile_multi.cnf")
+        res = exec_gophersat("./workingfile_multi.cnf")
+        
+        return res
+
+    def get_results(self,grades,admissions):
         """
         Print results of the solver
         Returns :
             f1_score_ (float): f1-score of the solution
             accuracy_ (float): accuracy of the solution
             time (float): time spent trying to find the optimum
-            error_count (int): 1/0 based on if gurobi converges or not 
         """
-        pass
+        t0 = time.time()
+        _, variables_idx, d = self.solve()
+        t1 = time.time()
+
+        if self.generator.nb_class == 1 :
+            predicted = []
+            for student in grades:
+                validated_courses = set()
+                for i,k in enumerate(student):
+                    if d[(i,k)]:
+                        validated_courses.add(i)
+                validated_courses = frozenset(validated_courses)
+                if d[validated_courses]:
+                    predicted.append(1)
+                else:
+                    predicted.append(0)
+            predicted
+
+
+            accuracy_ = accuracy_score(admissions,predicted)
+            f1_score_ = f1_score(admissions,predicted, average='macro')
+        else:
+            predicted = []
+            for student in grades:
+                current_class = 0
+                for h in range(self.generator.nb_class+1):
+                    current_class = h
+                    validated_courses = set()
+                    for i,k in enumerate(student):
+                        if d[(i,k,h)]:
+                            validated_courses.add(i)
+                    validated_courses = frozenset(validated_courses)
+                    if validated_courses in d.keys():
+                        if d[validated_courses]:
+                            continue
+                        else:
+                            break
+                    else:
+                        break
+                predicted.append(current_class-1)
+
+            predicted
+
+            accuracy_ = accuracy_score(admissions,predicted)
+            f1_score_ = f1_score(admissions,predicted, average='macro')
+
+        t = (t1-t0)*100//100
+
+        print(f"Runed in: {t} seconds ")
+        print("Precision: {:.2f} %".format(accuracy_*100))
+        print("F1-score:  {:.2f} %".format(f1_score_*100))
+        
+
+        
+                    
+
+        
