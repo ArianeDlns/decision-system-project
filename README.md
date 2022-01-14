@@ -40,11 +40,9 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort 
 - ``--seed`` : (default=None) - seed used 
 
 ### Performances 
-**Accuracy and f1-score for MR-Sort on 100 students**
-![alt text](img/scores_MR-Sort.png?raw=true "Title")
-
-**Timing for MR-Sort on 100 students**
-![alt text](img/time_MR-Sort.png?raw=true "Title")
+**Accuracy and f1-score for MR-Sort on 100 students**           |  **Timing for MR-Sort on 100 students**  
+:-------------------------:|:-------------------------:
+![alt text](img/scores_MR-Sort.png?raw=true "Title") |  ![alt text](img/time_MR-Sort.png?raw=true "Title")
 
 ## :package: Organisation of the project
 
