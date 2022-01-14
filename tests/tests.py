@@ -25,31 +25,30 @@ f1_score_, accuracy_, time_, error_count = MRSort_solv.get_results()
 #Test SAT-Solver
 
 #Simple case
-
+print("\nSIMPLE CASE FOR SAT\n")
 size = 100
 nb_grades = 5
 noise = 0
 nb_class = 1
 
 gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise, nb_class=nb_class)
-grades,admission = gen.generate_grades()
-gen.analyze_gen()
+grades,admissions = gen.generate_grades()
 
 SAT_Solv = SAT_Solver(generator=gen)
 SAT_Solv.init_clauses(grades,admissions)
-SAT_Solv.get_results()
+SAT_Solv.get_results(grades,admissions)
 
 # Multi case
-
+print()
+print("\nMULTI CLASS FOR SAT\n")
 size = 100
 nb_grades = 5
 noise = 0
 nb_class = 3
 
 gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise, nb_class=nb_class)
-grades,admission = gen.generate_grades()
-gen.analyze_gen()
+grades,admissions = gen.generate_grades()
 
 SAT_Solv = SAT_Solver(generator=gen)
 SAT_Solv.init_clauses(grades,admissions)
-SAT_Solv.get_results()
+SAT_Solv.get_results(grades, admissions)

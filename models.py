@@ -14,7 +14,7 @@ def powerset(iterable):
             s = list(iterable)
             return( chain.from_iterable(combinations(s, r) for r in range(len(s)+1)))
 
-def get_i2v(v2i_alpha, v2i_beta):
+def get_i2v(v2i_alpha, v2i_beta,A):
     i2v = {}
 
     for i in range(len(v2i_alpha)):
@@ -213,7 +213,12 @@ class SAT_Solver:
         """
         Initialize clauses with the grades and the admissions
         """
-        if self.generator.nb_clause == 1: #Simple case 
+            
+
+        if self.generator.nb_class == 1: #Simple case 
+
+            admissions = admissions.astype(int)
+
             #Variable alpha
             alpha = []
             for i in range(self.generator.nb_grades):
@@ -278,7 +283,7 @@ class SAT_Solver:
                         clause_4.append(alpha+[-v2i_beta[frozenset(c)]])
 
             self.clause = clause_1 + clause_2 + clause_3 + clause_4
-            self.i2v = get_i2v(v2i_alpha,v2i_beta)
+            self.i2v = get_i2v(v2i_alpha,v2i_beta,A)
 
         
 
@@ -354,7 +359,7 @@ class SAT_Solver:
                             clause_5.append([v2i_alpha[(i,k,h)],-v2i_alpha[(i,k,j)]])
 
             self.clause = clause_1 + clause_2 + clause_3 + clause_4 + clause_5
-            self.i2v = get_i2v(v2i_alpha,v2i_beta)
+            self.i2v = get_i2v(v2i_alpha,v2i_beta,A)
 
 
 
@@ -395,10 +400,12 @@ class SAT_Solver:
         myClauses= self.clause
         myDimacs = clauses_to_dimacs(myClauses,len(self.i2v))
 
-        write_dimacs_file(myDimacs,"./workingfile_multi.cnf")
-        res = exec_gophersat("./workingfile_multi.cnf")
+        write_dimacs_file(myDimacs,"./SAT_Solver.cnf")
+        t0 = time.time()
+        res = exec_gophersat("./SAT_Solver.cnf")
+        t1 = time.time()
         
-        return res
+        return res[-1], t1-t0
 
     def get_results(self,grades,admissions):
         """
@@ -408,11 +415,13 @@ class SAT_Solver:
             accuracy_ (float): accuracy of the solution
             time (float): time spent trying to find the optimum
         """
-        t0 = time.time()
-        _, variables_idx, d = self.solve()
-        t1 = time.time()
+            
+        
+        d,t = self.solve()
+        
 
         if self.generator.nb_class == 1 :
+            admissions = admissions.astype(int)
             predicted = []
             for student in grades:
                 validated_courses = set()
@@ -454,14 +463,12 @@ class SAT_Solver:
             accuracy_ = accuracy_score(admissions,predicted)
             f1_score_ = f1_score(admissions,predicted, average='macro')
 
-        t = (t1-t0)*100//100
-
-        print(f"Runed in: {t} seconds ")
+        print("Runed in: {:.2f} seconds ".format(t))
         print("Precision: {:.2f} %".format(accuracy_*100))
         print("F1-score:  {:.2f} %".format(f1_score_*100))
         
 
-        
+        return f1_score_,accuracy_,t
                     
 
         
