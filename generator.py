@@ -67,7 +67,7 @@ class GradesGenerator():
         
         if self.nb_class == 1: # Only 1 class (Accepted) the other student are automatically rejected
             if self.noise > 0:
-                print('Adding {:.2f} % of noise'.format(self.noise*100)) 
+                #print('Adding {:.2f} % of noise'.format(self.noise*100)) 
                 admissions = []
                 for grade in grades: 
                     tirage = np.random.binomial(1, self.noise)
@@ -82,7 +82,7 @@ class GradesGenerator():
         else: #Mutli class
             rng = np.random.default_rng(self.seed)
             if self.noise > 0:
-                print('Adding {:.2f} % of noise'.format(self.noise*100)) 
+                #print('Adding {:.2f} % of noise'.format(self.noise*100)) 
                 admissions = []
                 for grade in grades: 
                     tirage = np.random.binomial(1, self.noise)

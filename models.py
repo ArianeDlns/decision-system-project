@@ -118,7 +118,7 @@ class MRSort_Solver:
         end = time.time()
         self.time = end - start
 
-    def get_results(self):
+    def get_results(self, verbose:int=1):
         """
         Print results of the solver
         Returns :
@@ -134,14 +134,15 @@ class MRSort_Solver:
             accuracy_ = sum([results[i] == self.admission[i]
                             for i in range(len(results))])/len(results)
 
-            print(f"results:\n")
-            print(f"Objective: {self.obj.X}")
-            print(f"Lambda: {self.lbd.X}")
-            print(f"Weights: {self.weights.X}")
-            print(f"Betas: {self.betas.X}")
-            print(f"Results: {dict(Counter(results))}")
-            print("Precision: {:.2f} %".format(accuracy_*100))
-            print("F1-score:  {:.2f} %".format(f1_score_*100))
+            if verbose == 1:
+                print(f"results:\n")
+                print(f"Objective: {self.obj.X}")
+                print(f"Lambda: {self.lbd.X}")
+                print(f"Weights: {self.weights.X}")
+                print(f"Betas: {self.betas.X}")
+                print(f"Results: {dict(Counter(results))}")
+                print("Precision: {:.2f} %".format(accuracy_*100))
+                print("F1-score:  {:.2f} %".format(f1_score_*100))
             error_count = 0
             return f1_score_, accuracy_, self.time, error_count
 
