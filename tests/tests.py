@@ -1,4 +1,5 @@
 # Test Generator
+
 import sys
 sys.path.append('./')
 
@@ -7,8 +8,9 @@ from generator import GradesGenerator
 size = 100
 nb_grades = 5
 noise = 0
+nb_class = 1
 
-gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise)
+gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise, nb_class=nb_class)
 grades,admission = gen.generate_grades()
 gen.analyze_gen()
 
