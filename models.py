@@ -140,8 +140,8 @@ class MRSort_Solver:
             print(f"Weights: {self.weights.X}")
             print(f"Betas: {self.betas.X}")
             print(f"Results: {dict(Counter(results))}")
-            print("Precision: {:.2f} %\n".format(accuracy_*100))
-            print("F1-score:  {:.2f} %\n".format(f1_score_*100))
+            print("Precision: {:.2f} %".format(accuracy_*100))
+            print("F1-score:  {:.2f} %".format(f1_score_*100))
             error_count = 0
             return f1_score_, accuracy_, self.time, error_count
 
@@ -176,3 +176,33 @@ class MRSort_Solver:
               >= 0 for j in range(self.size)])
         print([(self.weights_.X[j] - self.deltas.X[j] - self.weights.X +
               np.ones(self.nb_grades)) >= 0 for j in range(self.size)])
+
+class SAT_Solver:
+    def __init__(self, generator, epsilon: float = 1e-6, M: int = 1e2):
+        """
+        Initialize the solver
+        """
+        pass
+
+    def init_clauses(self):
+        """
+        Initialize clauses
+        """
+        pass
+
+    def solve(self):
+        """
+        Solve SAT clauses
+        """
+        pass
+
+    def get_results(self):
+        """
+        Print results of the solver
+        Returns :
+            f1_score_ (float): f1-score of the solution
+            accuracy_ (float): accuracy of the solution
+            time (float): time spent trying to find the optimum
+            error_count (int): 1/0 based on if gurobi converges or not 
+        """
+        pass

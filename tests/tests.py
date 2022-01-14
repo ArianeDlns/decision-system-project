@@ -20,3 +20,4 @@ MRSort_solv.set_constraint('MaxMin')
 MRSort_solv.solve()
 f1_score_, accuracy_, time_, error_count = MRSort_solv.get_results()
 
+# Test SAT-Solver
