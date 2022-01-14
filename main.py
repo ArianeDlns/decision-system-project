@@ -15,8 +15,9 @@ if __name__ == '__main__':
     noise = args.noise
     nb_class = args.nb_class
     model = args.model
+    seed = args.seed
 
-    gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise)
+    gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise,seed=seed)
     grades,admission = gen.generate_grades()
     gen.analyze_gen()
 

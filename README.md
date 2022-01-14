@@ -29,8 +29,17 @@ Our solutions will be evaluated based on:
 
 ```bash
 python3 tests/tests.py # To run tests
-python main.py # To run the full module 
+python main.py # To run the full module with default arguments
+python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort --seed 99 # With specific arguments 
 ```
+
+**Arguments**:
+- ``--size`` : (default=150) - number of students graded
+- ``--nb_grades`` : (default=3) - number of grades
+- ``--n_class`` : (default=1) - number of classes
+- ``--noise`` : (default=0) - proportion of noisy data
+- ``--model`` : (default=MR-Sort) - model used either MR-Sort or SAT
+- ``--seed`` : (default=None) - seed used 
 
 ## :package: Organisation of the project
 
@@ -38,21 +47,23 @@ python main.py # To run the full module
 
 ```bash 
 .
-├── MR-Sort-NCS.pdf
+├── MR-Sort-NCS.pdf # Subject of the project
 ├── README.md
-├── generator.py
-├── main.py
-├── models.py
+├── generator.py # Generator class
+├── main.py # Entry point
+├── models.py # Models class
 ├── notebook
 │   ├── SolveurSAT.ipynb
 │   ├── generator.ipynb
 │   ├── gophersat.exe
 │   ├── gophersat.zip
+│   ├── testing_performances.ipynb # Testing performances of the MR-Sort solver
 │   └── workingfile.cnf
 ├── requirements.txt
 ├── tests
-│   └── tests.py
+│   └── tests.py  # Testing
 └── utils
+    ├── argument.py # Handeling arguments
     └── helpers.py
 ```
 
@@ -62,7 +73,7 @@ pip3 install -r requirements.txt
 ```
 ``gurobipy==9.5.0``
 
-## Theoretical Explanation 
+## :heavy_division_sign: Theoretical Explanation 
 
 
 The problem statement is as follows : 

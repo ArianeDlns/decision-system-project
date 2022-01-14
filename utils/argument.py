@@ -9,6 +9,8 @@ def parse_arguments():
                         help="""Number of students""")
     parser.add_argument("-g",
                         "--nb_grades",
+                        default=3,
+                        type=int,
                         help="""nb_grades""")
     parser.add_argument("-n",
                         "--nb_class",
@@ -20,6 +22,10 @@ def parse_arguments():
                         default=0,
                         type=float,
                         help="""noise""")
+    parser.add_argument("--seed",
+                        default=None,
+                        type=int,
+                        help="""int""")
     parser.add_argument("-m",
                         "--model",
                         default='MR-Sort',
