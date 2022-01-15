@@ -70,16 +70,16 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort 
 .
 ├── MR-Sort-NCS.pdf # Subject of the project
 ├── README.md
+├── gophersat # Solver MacOSx (Monterey)
+├── gophersat.exe # Solver Windows
 ├── generator.py # Generator class
 ├── main.py # Entry point
 ├── models.py # Models class
+├── img/ # Results in .png
 ├── notebook
 │   ├── SolveurSAT.ipynb
 │   ├── generator.ipynb
-│   ├── gophersat.exe
-│   ├── gophersat.zip
-│   ├── testing_performances.ipynb # Testing performances of the MR-Sort solver
-│   └── workingfile.cnf
+│   └──testing_performances.ipynb # Testing performances of the MR-Sort solver
 ├── requirements.txt
 ├── tests
 │   └── tests.py  # Testing

@@ -44,7 +44,7 @@ print("\nMULTI CLASS FOR SAT\n")
 size = 100
 nb_grades = 5
 noise = 0
-nb_class = 3
+nb_class = 8
 
 gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise, nb_class=nb_class)
 grades,admissions = gen.generate_grades()
