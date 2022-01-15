@@ -30,5 +30,4 @@ if __name__ == '__main__':
         grades,admissions = gen.generate_grades()
         SAT_Solv = SAT_Solver(generator=gen)
         SAT_Solv.init_clauses(grades,admissions)
-        SAT_Solv.get_results(grades,admissions)
-        f1_score_, accuracy_, time_, error_rate = SAT_Solv.get_results()
+        f1_score_, accuracy_, time_, error_rate = SAT_Solv.get_results(grades,admissions)
