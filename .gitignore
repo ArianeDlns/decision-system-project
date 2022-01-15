@@ -136,3 +136,6 @@ credentials.yml
 
 #remove models
 models/
+
+# cnf files
+*.cnf
