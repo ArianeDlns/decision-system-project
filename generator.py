@@ -49,7 +49,7 @@ class GradesGenerator():
             betas = rng.integers(low=8, high=15, size=self.nb_grades)
         else: #Multi class case
             betas = [rng.integers(low=8, high=15, size=self.nb_grades)]
-            for _ in range(self.nb_grades):
+            for _ in range(self.nb_class):
                 last_boundary = betas[-1]
                 new_boundary = []
                 for last_low in (last_boundary):
