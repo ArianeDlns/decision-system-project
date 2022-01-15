@@ -48,14 +48,14 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort 
 **Accuracy and f1-score for SAT on 100 students**           |  **Timing for SAT on 100 students**  
 ![alt text](img/scores_SAT.png?raw=true "scores_SAT") |  ![alt text](img/time_SAT.png?raw=true "time_SAT")
 
-**2. Impact of the noise**
+**2. Impact of the noise**  
 **Accuracy and f1-score for MR-Sort on 100 students and 3 grades**           |  **Timing for MR-Sort on 100 students and 3 grades**  
 :-------------------------:|:-------------------------:
 ![alt text](img/scores_MR-Sort_noisy.png?raw=true "scores_MR-Sort") |  ![alt text](img/time_MR-Sort_noisy.png?raw=true "time_MR-Sort")
 **Accuracy and f1-score for SAT on 100 students and 3 grades**           |  **Timing for SAT on 100 students and 3 grades**  
 ![alt text](img/scores_SAT_noisy.png?raw=true "scores_SAT") |  ![alt text](img/time_SAT_noisy.png?raw=true "time_SAT")
 
-**3. Impact of the multi class**
+**3. Impact of the multi class**  
 **Accuracy and f1-score for SAT on 150 students and 3 grades**           |  **Timing for SAT on 150 students and 3 grades**  
 :-------------------------:|:-------------------------:
 ![alt text](img/scores_SAT_multi.png?raw=true "scores_SAT") |  ![alt text](img/time_SAT_multi.png?raw=true "scores_SAT")
