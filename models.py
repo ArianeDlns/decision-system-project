@@ -1,30 +1,14 @@
-from gurobipy import *
 import time
+from gurobipy import *
 import numpy as np
 from collections import Counter
+from utils.helpers import powerset, get_i2v
 from sklearn.metrics import f1_score, accuracy_score
-from itertools import chain
-from itertools import combinations
 import subprocess
+import platform
 
 
 MAX_GRADE = 21
-
-def powerset(iterable): 
-            s = list(iterable)
-            return( chain.from_iterable(combinations(s, r) for r in range(len(s)+1)))
-
-def get_i2v(v2i_alpha, v2i_beta,A):
-    i2v = {}
-
-    for i in range(len(v2i_alpha)):
-        i2v[i+1] = list(v2i_alpha.keys())[list(v2i_alpha.values()).index(i+1)]
-
-    for i in range(len(v2i_beta)):
-        i2v[i+A+1] = list(v2i_beta.keys())[list(v2i_beta.values()).index(i+1+A)]
-    
-    return i2v
-
 
 class MRSort_Solver:
     def __init__(self, generator, epsilon: float = 1e-6, M: int = 1e2):
@@ -201,8 +185,6 @@ class MRSort_Solver:
 
 class SAT_Solver:
 
-    
-    
     def __init__(self, generator):
         """
         Initialize the solver
@@ -214,8 +196,6 @@ class SAT_Solver:
         """
         Initialize clauses with the grades and the admissions
         """
-            
-
         if self.generator.nb_class == 1: #Simple case 
 
             admissions = admissions.astype(int)
@@ -229,8 +209,6 @@ class SAT_Solver:
             v2i_alpha = {v : i+1 for i,v in enumerate(alpha)} # à chaque variable associe un nombre
             A = len(v2i_alpha)
             
-                 
-
             #L'ensemble des subset 
             s = frozenset({i for i in range(self.generator.nb_grades)})
             subsets = list(powerset(s)) 
@@ -241,7 +219,6 @@ class SAT_Solver:
 
             #Clause 1
             clause_1 = []
-
             for i in range(self.generator.nb_grades):
                 for k in range(MAX_GRADE-1):
                     for j in range(k+1,MAX_GRADE):
@@ -249,7 +226,6 @@ class SAT_Solver:
 
             #Clause 2
             clause_2 = []
-
             for i in subsets:
                 C_prime = frozenset(i)
                 for j in subsets:
@@ -258,7 +234,6 @@ class SAT_Solver:
                         clause_2.append([-v2i_beta[C], v2i_beta[C_prime]])
 
             #Clause 3
-
             clause_3 = []
             for st_idx,student in enumerate(grades):
                 if admissions[st_idx] == 1:
@@ -270,10 +245,7 @@ class SAT_Solver:
                         clause_3.append(alpha+[v2i_beta[frozenset(s.difference(c))]])
 
             #Clause 4
-
             clause_4 = []
-
-
             for st_idx,student in enumerate(grades):
                 if admissions[st_idx] == 0:
                     for c in subsets:
@@ -310,16 +282,16 @@ class SAT_Solver:
             #Dictionnaire beta
             v2i_beta = {frozenset(v) : A+i+1 for i,v in enumerate(subsets)}
 
+            # Clause 1 
             clause_1 = []
-
             for i in range(self.generator.nb_grades):
                 for k in range(MAX_GRADE-1):
                     for h in range(self.generator.nb_class):
                         for j in range(k+1,MAX_GRADE):
                             clause_1.append([-v2i_alpha[(i,k,h)], v2i_alpha[(i,j,h)]])
 
+            # Clause 2 
             clause_2 = []
-
             for i in subsets:
                 C_prime = frozenset(i)
                 for j in subsets:
@@ -327,9 +299,7 @@ class SAT_Solver:
                     if C.issubset(C_prime) and C != C_prime:
                         clause_2.append([-v2i_beta[C], v2i_beta[C_prime]])
 
-            clause_3 = []
-
-
+            # Clause 3
             clause_3 = []
             for st_idx,student in enumerate(grades):
                 for c in subsets:
@@ -339,9 +309,8 @@ class SAT_Solver:
                 
                     clause_3.append(alpha+[v2i_beta[frozenset(s.difference(c))]])
 
-
+            # Clause 4
             clause_4 = []
-
             for st_idx,student in enumerate(grades):
                 if admissions[st_idx] < self.generator.nb_class:
                     for c in subsets:
@@ -350,9 +319,9 @@ class SAT_Solver:
                             alpha.append(-v2i_alpha[(i,student[i],admissions[st_idx]+1)])
                     
                         clause_4.append(alpha+[-v2i_beta[frozenset(c)]])
-
+            
+            # Clause 5
             clause_5 = []
-
             for k in range(MAX_GRADE):
                 for i in range(self.generator.nb_grades):
                     for h in range(self.generator.nb_class):
@@ -361,14 +330,6 @@ class SAT_Solver:
 
             self.clause = clause_1 + clause_2 + clause_3 + clause_4 + clause_5
             self.i2v = get_i2v(v2i_alpha,v2i_beta,A)
-
-
-
-
-                
-
-
-
 
     def solve(self):
         """
@@ -395,7 +356,6 @@ class SAT_Solver:
                 return False, [], {}
 
             model = lines[2][2:].split(" ")
-
             return True, [int(x) for x in model if int(x) != 0], { self.i2v[abs(int(v))] : int(v) > 0 for v in model if int(v)!=0} 
 
         myClauses= self.clause
@@ -403,7 +363,10 @@ class SAT_Solver:
 
         write_dimacs_file(myDimacs,"./SAT_Solver.cnf")
         t0 = time.time()
-        res = exec_gophersat("./SAT_Solver.cnf")
+        if platform.system() == 'Windows':
+            res = exec_gophersat("./SAT_Solver.cnf")
+        else:
+            res = exec_gophersat("./SAT_Solver.cnf",  cmd = "./gophersat")
         t1 = time.time()
         
         return res[-1], t1-t0
@@ -415,13 +378,10 @@ class SAT_Solver:
             f1_score_ (float): f1-score of the solution
             accuracy_ (float): accuracy of the solution
             time (float): time spent trying to find the optimum
-            error_count (int): 1/0 based on if gurobi converges or not 
+            error_rate (int): numer of misclassification 
         """
             
-        
         d,t = self.solve()
-        
-
         if self.generator.nb_class == 1 :
             admissions = admissions.astype(int)
             predicted = []
@@ -436,7 +396,6 @@ class SAT_Solver:
                 else:
                     predicted.append(0)
             predicted
-
 
             accuracy_ = accuracy_score(admissions,predicted)
             f1_score_ = f1_score(admissions,predicted, average='macro')
@@ -460,9 +419,7 @@ class SAT_Solver:
                     else:
                         break
                 predicted.append(current_class-1)
-
             predicted
-
             accuracy_ = accuracy_score(admissions,predicted)
             f1_score_ = f1_score(admissions,predicted, average='macro')
             error_rate = sum(admissions != predicted)
@@ -471,8 +428,6 @@ class SAT_Solver:
         print("Precision: {:.2f} %".format(accuracy_*100))
         print("F1-score:  {:.2f} %".format(f1_score_*100))
         print(f"Error rate: {error_rate} errors")
-        
-
         return f1_score_,accuracy_,t, error_rate
                     
 
