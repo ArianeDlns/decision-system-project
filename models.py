@@ -331,9 +331,12 @@ class SAT_Solver:
             self.clause = clause_1 + clause_2 + clause_3 + clause_4 + clause_5
             self.i2v = get_i2v(v2i_alpha,v2i_beta,A)
 
-    def solve(self):
+    def solve(self, path='./'):
         """
         Solve SAT clauses
+        Returns :
+            d (float): results
+            t (float): time result
         """
         def clauses_to_dimacs(clauses,numvar) :
             dimacs = 'c This is it\np cnf '+str(numvar)+' '+str(len(clauses))+'\n'
@@ -347,7 +350,7 @@ class SAT_Solver:
             with open(filename, "w", newline="") as cnf:
                 cnf.write(dimacs)
 
-        def exec_gophersat(filename, cmd = "./gophersat.exe", encoding = "utf8") :
+        def exec_gophersat(filename, cmd = './gophersat.exe', encoding = "utf8") :
             result = subprocess.run([cmd, filename], stdout=subprocess.PIPE, check=True, encoding=encoding)
             string = str(result.stdout)
             lines = string.splitlines()
@@ -364,70 +367,85 @@ class SAT_Solver:
         write_dimacs_file(myDimacs,"./SAT_Solver.cnf")
         t0 = time.time()
         if platform.system() == 'Windows':
-            res = exec_gophersat("./SAT_Solver.cnf")
+            cmd = path + 'gophersat.exe'
+            res = exec_gophersat("./SAT_Solver.cnf", cmd = cmd)
         else:
-            res = exec_gophersat("./SAT_Solver.cnf",  cmd = "./gophersat")
+            cmd = path + 'gophersat'
+            res = exec_gophersat("./SAT_Solver.cnf",  cmd = cmd)
         t1 = time.time()
         
         return res[-1], t1-t0
 
-    def get_results(self,grades,admissions):
+    def get_results(self,grades,admissions, path='./', verbose:int=1):
         """
         Print results of the solver
+        Args:
+            grades (array<array<int>>) : grades
+            admissions (array<int>) : array of admissions
+            path (str) : path to the gophersat solver
+            verbose (bool) : whether to print or note results
         Returns :
             f1_score_ (float): f1-score of the solution
             accuracy_ (float): accuracy of the solution
             time (float): time spent trying to find the optimum
             error_rate (int): numer of misclassification 
-        """
-            
-        d,t = self.solve()
-        if self.generator.nb_class == 1 :
-            admissions = admissions.astype(int)
-            predicted = []
-            for student in grades:
-                validated_courses = set()
-                for i,k in enumerate(student):
-                    if d[(i,k)]:
-                        validated_courses.add(i)
-                validated_courses = frozenset(validated_courses)
-                if d[validated_courses]:
-                    predicted.append(1)
-                else:
-                    predicted.append(0)
-            predicted
-
-            accuracy_ = accuracy_score(admissions,predicted)
-            f1_score_ = f1_score(admissions,predicted, average='macro')
-            error_rate = sum(admissions != predicted)
-        else:
-            predicted = []
-            for student in grades:
-                current_class = 0
-                for h in range(self.generator.nb_class+1):
-                    current_class = h
+        """ 
+        d,t = self.solve(path=path) 
+        try:     
+            if self.generator.nb_class == 1 :
+                admissions = admissions.astype(int)
+                predicted = []
+                for student in grades:
                     validated_courses = set()
                     for i,k in enumerate(student):
-                        if d[(i,k,h)]:
+                        if d[(i,k)]:
                             validated_courses.add(i)
                     validated_courses = frozenset(validated_courses)
-                    if validated_courses in d.keys():
-                        if d[validated_courses]:
-                            continue
+                    if d[validated_courses]:
+                        predicted.append(1)
+                    else:
+                        predicted.append(0)
+                predicted
+
+                accuracy_ = accuracy_score(admissions,predicted)
+                f1_score_ = f1_score(admissions,predicted, average='macro')
+                error_rate = sum(admissions != predicted)
+            else:
+                predicted = []
+                for student in grades:
+                    current_class = 0
+                    for h in range(self.generator.nb_class+1):
+                        current_class = h
+                        validated_courses = set()
+                        for i,k in enumerate(student):
+                            if d[(i,k,h)]:
+                                validated_courses.add(i)
+                        validated_courses = frozenset(validated_courses)
+                        if validated_courses in d.keys():
+                            if d[validated_courses]:
+                                continue
+                            else:
+                                break
                         else:
                             break
-                    else:
-                        break
-                predicted.append(current_class-1)
-            predicted
-            accuracy_ = accuracy_score(admissions,predicted)
-            f1_score_ = f1_score(admissions,predicted, average='macro')
-            error_rate = sum(admissions != predicted)
+                    predicted.append(current_class-1)
+                predicted
+                accuracy_ = accuracy_score(admissions,predicted)
+                f1_score_ = f1_score(admissions,predicted, average='macro')
+                error_rate = sum(admissions != predicted)
 
-        print("Runed in: {:.2f} seconds ".format(t))
-        print("Precision: {:.2f} %".format(accuracy_*100))
-        print("F1-score:  {:.2f} %".format(f1_score_*100))
-        print(f"Error rate: {error_rate} errors")
+            if verbose == 1:
+                print("Runed in: {:.2f} seconds ".format(t))
+                print("Precision: {:.2f} %".format(accuracy_*100))
+                print("F1-score:  {:.2f} %".format(f1_score_*100))
+                print(f"Error rate: {error_rate} errors")
+            else:
+                pass
+        except KeyError:
+            print('One of the clause is not working - Fail to converges')
+            f1_score_ = 0
+            accuracy_ = 0
+            error_rate = 1
         return f1_score_,accuracy_,t, error_rate
                     
 
