@@ -28,7 +28,8 @@ Our solutions will be evaluated based on:
 ## :runner: Running the code
 
 ```bash
-python main
+python3 tests/tests.py # To run tests
+python main.py # To run the full module 
 ```
 
 ## :package: Organisation of the project
@@ -36,23 +37,29 @@ python main
 ### Structure
 
 ```bash 
-├── notebook
-│   └── generator.ipynb
-└── utils
-│   └── helpers.py
-├── tests
-│   └── tests.py
+.
 ├── MR-Sort-NCS.pdf
 ├── README.md
+├── generator.py
 ├── main.py
-└── requirements.txt
+├── models.py
+├── notebook
+│   ├── SolveurSAT.ipynb
+│   ├── generator.ipynb
+│   ├── gophersat.exe
+│   ├── gophersat.zip
+│   └── workingfile.cnf
+├── requirements.txt
+├── tests
+│   └── tests.py
+└── utils
+    └── helpers.py
 ```
 
 ### Requirements 
 ```bash
 pip3 install -r requirements.txt 
 ```
-
 ``gurobipy==9.5.0``
 
 ## Theoretical Explanation 
@@ -178,6 +185,43 @@ In the same way, for all students that are rejected, we also should write clause
 ```
 
 This means that the criteria in the coalition $`C`$ are not sufficient to be a majority.
+
+Now, let's get into the case where there are no longer two end classes ($`A`$ and $`R`$) but an arbitrary number ($`H`$). We can derive a SAT formulation of this problem from the simpler one we described before. Let the index $`h`$
+ describe the end profile index and $`\alpha_{kih}`$ the boolean variable that is true if on criterion $`i`$, the value $`k`$ is sufficient at level $`h`$.
+
+We can adapt the four clauses :
+
+
+The ascending scales clause : 
+
+```math
+\forall k' > k, \quad \alpha_{kih} \Rightarrow \alpha_{k'ih} \text{ i.e. } \neg \alpha_{kih} \lor \alpha_{k'ih}
+```
+
+
+The coalitions strength clause :
+
+```math
+\forall C \subset C', \quad \beta_C \Rightarrow \beta_{C'} \text{ i.e. } \neg \beta_C \lor \beta_{C'}
+```
+
+
+The outranking of alternatives by boudary below them :
+```math
+\forall C \subset \mathcal{N}, \quad \forall h \in H, \quad  \bigvee\limits_{i \in C} \alpha_{a_i ih} \lor \beta_{\mathcal{N}\setminus C}
+```
+
+The outranking of alternatives by boundary above them :
+
+```math
+\forall C \subset \mathcal{N}, \quad \forall h \in H, \quad  \bigvee\limits_{i \in C} \neg \alpha_{u_i ih} \lor \neg \beta_{C}
+```
+
+And finally we add another clause that will define the hierarchy of profiles amongst the different end results $`h`$.
+
+```math
+\forall h'>h, \quad \neg \alpha_{kih} \Rightarrow \neg \alpha_{kih'} \text{ i.e. } \alpha_{kih} \lor \neg \alpha_{kih'}
+```
 
 
 ## References 
