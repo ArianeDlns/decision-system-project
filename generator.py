@@ -87,7 +87,8 @@ class GradesGenerator():
                 for grade in grades: 
                     tirage = np.random.binomial(1, self.noise)
                     if tirage:
-                        admissions += [rng.integers(low=0, high = self.nb_class)] #Random class if tirage
+                        #admissions += [rng.integers(low=0, high = self.nb_class+1)] #Random class if tirage
+                        admissions += [np.random.randint(self.nb_class+1)]
                     else:
                         c = 0
                         while ((grade >= self.betas[c])*self.weights).sum() >= self.lbd and c < self.nb_class:
