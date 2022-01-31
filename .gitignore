@@ -143,3 +143,11 @@ models/
 
 #Data
 /data 
+
+# cnf files
+notebook/*.cnf
+notebook/*.wcnf
+
+# gophersat
+gophersat
+gophersat.exe
