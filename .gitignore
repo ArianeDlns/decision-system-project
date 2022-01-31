@@ -139,3 +139,6 @@ models/
 
 # cnf files
 *.cnf
+
+#Data
+/data 

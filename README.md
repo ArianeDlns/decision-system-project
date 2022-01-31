@@ -255,7 +255,6 @@ And finally we add another clause that will define the hierarchy of profiles amo
 \forall h'>h, \quad \neg \alpha_{kih} \Rightarrow \neg \alpha_{kih'} \text{ i.e. } \alpha_{kih} \lor \neg \alpha_{kih'}
 ```
 
-
 ## References 
 [1] D. Bouyssou, T. Marchant, An axiomatic approach to noncompensatory sorting methods in MCDM, I: The case of two categories, European Journal of Operational Research, 178(1):217–245,(2007).  
 
@@ -266,3 +265,9 @@ And finally we add another clause that will define the hierarchy of profiles amo
 [4] Agnes Leroy, Vincent Mousseau, and Marc Pirlot. Learning the parameters of a multiple criteria sorting method. Algorithmic Decision Theory, 219-233, (2011).  
 
 [5] Belahcene K., Labreuche C., Maudet N., Mousseau V., and Ouerdane, W. An efficient SAT formu- lation for learning multiple criteria non-compensatory sorting rules from examples, Computers & Operations Research, 97, 58–71, (2018).  
+
+[6] A. Leroy, V. Mousseau, and M. Pirlot, ‘Learning the parameters of a multiple criteria sorting method’, in International Conference on Algorithmic Decision Theory, pp. 219–233. Springer, (2011).   
+
+[7] J. Berg, M. Järvisalo, R. Martins, Advances in Maximum Satisfiability, ECAI’20 Online, September 4, 2020.  
+
+[8] A. Tlili, K. Belahcène, O. Khaled, V. Mousseau, W. Ouerdane, Learning Non-Compensatory Sorting models using efficient SAT/MaxSAT formulations, European Journal of Operational Research, August 2021  
