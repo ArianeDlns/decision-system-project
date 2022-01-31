@@ -15,8 +15,9 @@
 > Consider a situation in which a committee for a higher education program has to decide about the admission of students on the basis of their evaluations in 4 courses: mathematics ($`M`$), physics ($`P`$), literature ($`L`$) and history ($`H`$). Evaluations on all courses range in the $`[0,20]`$ interval. To be accepted ($`A`$) in the program, the committee considers that a student should obtain at least 12 on a “majority” of courses, otherwise, the student is refused ($`R`$). From the committee point of view, all courses (criteria) do not have the same importance. To define the required majority of courses, the committee attaches a weight $`w_j ≥ 0`$ to each course such that they sum to 1; a subset of courses $`C ⊆ {M, P, L, H}`$ is considered as a majority if $`\forall j∈C`$ $`w_j ≥ λ`$, where $`λ ∈ [0, 1]`$ is a required majority level.
 
 **To solve this problem we will implement:**
-1. an Inv-MR-Sort with a linear solver (gurobi) 
-2. a Inv-NCS  with a SAT/MaxSAT solver
+1. an Inv-NCS with a mixed integer linear solver (gurobi) 
+2. a Inv-NCS  with a SAT solver
+3. a Inv-NCS  with a MaxSAT solver
 
 Our solutions will be evaluated based on: 
 1. computational time
@@ -47,6 +48,8 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MILP --s
 ![alt text](img/scores_MR-Sort.png?raw=true "scores_MR-Sort") |  ![alt text](img/time_MR-Sort.png?raw=true "time_MR-Sort")
 **Accuracy and f1-score for SAT on 100 students**           |  **Timing for SAT on 100 students**  
 ![alt text](img/scores_SAT.png?raw=true "scores_SAT") |  ![alt text](img/time_SAT.png?raw=true "time_SAT")
+**Accuracy and f1-score for MaxSAT on 100 students**           |  **Timing for MaxSAT on 100 students**  
+![alt text](img/scores_MaxSAT.png?raw=true "scores_MaxSAT") |  ![alt text](img/time_MaxSAT.png?raw=true "time_MaxSAT")
 
 **2. Impact of the noise**  
 
@@ -55,12 +58,16 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MILP --s
 ![alt text](img/scores_MR-Sort_noisy.png?raw=true "scores_MR-Sort") |  ![alt text](img/time_MR-Sort_noisy.png?raw=true "time_MR-Sort")
 **Accuracy and f1-score for SAT on 100 students and 3 grades**           |  **Timing for SAT on 100 students and 3 grades**  
 ![alt text](img/scores_SAT_noisy.png?raw=true "scores_SAT") |  ![alt text](img/time_SAT_noisy.png?raw=true "time_SAT")
+**Accuracy and f1-score for MaxSAT on 100 students and 3 grades**           |  **Timing for MaxSAT on 100 students and 3 grades**  
+![alt text](img/scores_MaxSAT_noisy.png?raw=true "scores_MaxSAT") |  ![alt text](img/time_MaxSAT_noisy.png?raw=true "time_MaxSAT")
 
 **3. Impact of the multi class**  
 
 **Accuracy and f1-score for SAT on 150 students and 3 grades**           |  **Timing for SAT on 150 students and 3 grades**  
 :-------------------------:|:-------------------------:
 ![alt text](img/scores_SAT_multi.png?raw=true "scores_SAT") |  ![alt text](img/time_SAT_multi.png?raw=true "scores_SAT")
+**Accuracy and f1-score for MaxSAT on 150 students and 3 grades**           |  **Timing for MaxSAT on 150 students and 3 grades**  
+![alt text](img/scores_MaxSAT_multi.png?raw=true "scores_MaxSAT") |  ![alt text](img/time_MaxSAT_multi.png?raw=true "scores_MaxSAT")  
 
 ## :package: Organisation of the project
 
@@ -70,8 +77,8 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MILP --s
 .
 ├── MR-Sort-NCS.pdf # Subject of the project
 ├── README.md
-├── gophersat # Solver MacOSx (Monterey)
-├── gophersat.exe # Solver Windows
+├── gophersat # Solver MacOSx (Monterey) (You need to add it)
+├── gophersat.exe # Solver Windows (You need to add it)
 ├── generator.py # Generator class
 ├── main.py # Entry point
 ├── models.py # Models class
@@ -89,6 +96,8 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MILP --s
 ```
 
 ### Requirements 
+Download and move the solvers gophersat into the directory
+
 ```bash
 pip3 install -r requirements.txt 
 ```
