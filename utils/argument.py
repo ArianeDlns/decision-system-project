@@ -28,8 +28,8 @@ def parse_arguments():
                         help="""int""")
     parser.add_argument("-m",
                         "--model",
-                        default='MR-Sort',
-                        choices=['MR-Sort', 'SAT'],
+                        default='MILP',
+                        choices=['MILP', 'SAT'],
                         help='Choosing the model used for prediction (default: %(default)s)')
     return parser.parse_args()
 

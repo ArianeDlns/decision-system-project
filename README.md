@@ -28,7 +28,7 @@ Our solutions will be evaluated based on:
 ```bash
 python3 tests/tests.py # To run tests
 python main.py # To run the full module with default arguments
-python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort --seed 99 # With specific arguments 
+python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MILP --seed 99 # With specific arguments 
 ```
 
 **Arguments**:
@@ -36,13 +36,13 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort 
 - ``--nb_grades`` : (default=3) - number of grades
 - ``--nb_class`` : (default=1) - number of classes
 - ``--noise`` : (default=0) - proportion of noisy data
-- ``--model`` : (default=MR-Sort) - model used either MR-Sort or SAT
+- ``--model`` : (default=MR-Sort) - model used either MILP or SAT
 - ``--seed`` : (default=None) - seed used 
 
 ### Performances 
 **1. Impact of the nb_grades**
 
-**Accuracy and f1-score for MR-Sort on 100 students**           |  **Timing for MR-Sort on 100 students**  
+**Accuracy and f1-score for MILP on 100 students**           |  **Timing for MILP on 100 students**  
 :-------------------------:|:-------------------------:
 ![alt text](img/scores_MR-Sort.png?raw=true "scores_MR-Sort") |  ![alt text](img/time_MR-Sort.png?raw=true "time_MR-Sort")
 **Accuracy and f1-score for SAT on 100 students**           |  **Timing for SAT on 100 students**  
@@ -50,7 +50,7 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MR-Sort 
 
 **2. Impact of the noise**  
 
-**Accuracy and f1-score for MR-Sort on 100 students and 3 grades**           |  **Timing for MR-Sort on 100 students and 3 grades**  
+**Accuracy and f1-score for MILP on 100 students and 3 grades**           |  **Timing for MILP on 100 students and 3 grades**  
 :-------------------------:|:-------------------------:
 ![alt text](img/scores_MR-Sort_noisy.png?raw=true "scores_MR-Sort") |  ![alt text](img/time_MR-Sort_noisy.png?raw=true "time_MR-Sort")
 **Accuracy and f1-score for SAT on 100 students and 3 grades**           |  **Timing for SAT on 100 students and 3 grades**  

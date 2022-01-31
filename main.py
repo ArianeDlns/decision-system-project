@@ -4,7 +4,7 @@ import sys
 sys.path.append('./')
 
 from generator import GradesGenerator
-from models import MRSort_Solver, SAT_Solver
+from models import MRSort_Solver, SAT_Solver, Max_SAT_Solver
 
 from utils.argument import parse_arguments
 
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     grades,admission = gen.generate_grades()
     gen.analyze_gen()
 
-    if model == 'MR-Sort':
+    if model == 'MILP':
         MRSort_solv = MRSort_Solver(gen)
         MRSort_solv.set_constraint('MaxMin')
         MRSort_solv.solve()
@@ -31,3 +31,10 @@ if __name__ == '__main__':
         SAT_Solv = SAT_Solver(generator=gen)
         SAT_Solv.init_clauses(grades,admissions)
         f1_score_, accuracy_, time_, error_rate = SAT_Solv.get_results(grades,admissions)
+    elif model == 'Max-SAT': 
+        grades,admissions = gen.generate_grades()
+        Max_SAT_Solv = Max_SAT_Solver(generator=gen)
+        Max_SAT_Solv.init_clauses(grades,admissions)
+        f1_score_, accuracy_, time_, error_rate = Max_SAT_Solv.get_results(grades,admissions)
+    else:
+        print("Please choose model between ['']")
