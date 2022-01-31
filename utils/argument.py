@@ -29,7 +29,7 @@ def parse_arguments():
     parser.add_argument("-m",
                         "--model",
                         default='MILP',
-                        choices=['MILP', 'SAT'],
+                        choices=['MILP', 'SAT','Max-SAT'],
                         help='Choosing the model used for prediction (default: %(default)s)')
     return parser.parse_args()
 

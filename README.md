@@ -36,7 +36,7 @@ python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MILP --s
 - ``--nb_grades`` : (default=3) - number of grades
 - ``--nb_class`` : (default=1) - number of classes
 - ``--noise`` : (default=0) - proportion of noisy data
-- ``--model`` : (default=MR-Sort) - model used either MILP or SAT
+- ``--model`` : (default=MILP) - model used either MILP, SAT or Max-SAT
 - ``--seed`` : (default=None) - seed used 
 
 ### Performances 
