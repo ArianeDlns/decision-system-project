@@ -150,6 +150,7 @@ class MRSort_Solver:
                 print(f"Weights: {self.weights.X}")
                 print(f"Betas: {self.betas.X}")
                 print(f"Results: {dict(Counter(results))}")
+                print("Ran in: {:.2f} seconds ".format(self.time))
                 print("Precision: {:.2f} %".format(accuracy_*100))
                 print("F1-score:  {:.2f} %".format(f1_score_*100))
             error_count = 0
