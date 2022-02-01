@@ -388,8 +388,23 @@ class SAT_Solver:
         t1 = time.time()
 
         return res[-1], t1-t0
+    def predict(self, student,d):
+        nb_class =  self.generator.nb_class
+        valid = True
+        final_class = 0
+        while valid and final_class < nb_class:
+            final_class += 1
+            validated_courses = set()
+            for i,k in enumerate(student):
+                if d[(i,k,final_class)]:
+                    validated_courses.add(i)
+            validated_courses = frozenset(validated_courses)
+            if not d[validated_courses]:
+                valid = False
+                final_class -= 1
+        return final_class
 
-    def get_results(self, grades, admissions, path='./', verbose: int = 1):
+    def get_results(self,grades,admissions, path='./', verbose:int=1):
         """
         Print results of the solver
         Args:
@@ -402,16 +417,16 @@ class SAT_Solver:
             accuracy_ (float): accuracy of the solution
             time (float): time spent trying to find the optimum
             error_rate (int): numer of misclassification 
-        """
-        d, t = self.solve(path=path)
-        try:
-            if self.generator.nb_class == 1:
+        """ 
+        d,t = self.solve(path=path) 
+        try:     
+            if self.generator.nb_class == 1 :
                 admissions = admissions.astype(int)
                 predicted = []
                 for student in grades:
                     validated_courses = set()
-                    for i, k in enumerate(student):
-                        if d[(i, k)]:
+                    for i,k in enumerate(student):
+                        if d[(i,k)]:
                             validated_courses.add(i)
                     validated_courses = frozenset(validated_courses)
                     if d[validated_courses]:
@@ -420,31 +435,14 @@ class SAT_Solver:
                         predicted.append(0)
                 predicted
 
-                accuracy_ = accuracy_score(admissions, predicted)
-                f1_score_ = f1_score(admissions, predicted, average='macro')
+                accuracy_ = accuracy_score(admissions,predicted)
+                f1_score_ = f1_score(admissions,predicted, average='macro')
                 error_rate = sum(admissions != predicted)
             else:
-                predicted = []
-                for student in grades:
-                    current_class = 0
-                    for h in range(self.generator.nb_class+1):
-                        current_class = h
-                        validated_courses = set()
-                        for i, k in enumerate(student):
-                            if d[(i, k, h)]:
-                                validated_courses.add(i)
-                        validated_courses = frozenset(validated_courses)
-                        if validated_courses in d.keys():
-                            if d[validated_courses]:
-                                continue
-                            else:
-                                break
-                        else:
-                            break
-                    predicted.append(current_class-1)
+                predicted = [self.predict(student,d) for student in grades]
                 predicted
-                accuracy_ = accuracy_score(admissions, predicted)
-                f1_score_ = f1_score(admissions, predicted, average='macro')
+                accuracy_ = accuracy_score(admissions,predicted)
+                f1_score_ = f1_score(admissions,predicted, average='macro')
                 error_rate = sum(admissions != predicted)
 
             if verbose == 1:
@@ -459,7 +457,7 @@ class SAT_Solver:
             f1_score_ = 0
             accuracy_ = 0
             error_rate = 1
-        return f1_score_, accuracy_, t, error_rate
+        return f1_score_,accuracy_,t, error_rate
 
 
 class Max_SAT_Solver:
@@ -707,6 +705,22 @@ class Max_SAT_Solver:
         t1 = time.time()
         
         return res[-1], t1-t0
+    
+    def predict(self, student,d):
+        nb_class =  self.generator.nb_class
+        valid = True
+        final_class = 0
+        while valid and final_class < nb_class:
+            final_class += 1
+            validated_courses = set()
+            for i,k in enumerate(student):
+                if d[(i,k,final_class)]:
+                    validated_courses.add(i)
+            validated_courses = frozenset(validated_courses)
+            if not d[validated_courses]:
+                valid = False
+                final_class -= 1
+        return final_class
 
     def get_results(self,grades,admissions, path='./', verbose:int=1):
         """
@@ -743,24 +757,7 @@ class Max_SAT_Solver:
                 f1_score_ = f1_score(admissions,predicted, average='macro')
                 error_rate = sum(admissions != predicted)
             else:
-                predicted = []
-                for student in grades:
-                    current_class = 0
-                    for h in range(self.generator.nb_class+1):
-                        current_class = h
-                        validated_courses = set()
-                        for i,k in enumerate(student):
-                            if d[(i,k,h)]:
-                                validated_courses.add(i)
-                        validated_courses = frozenset(validated_courses)
-                        if validated_courses in d.keys():
-                            if d[validated_courses]:
-                                continue
-                            else:
-                                break
-                        else:
-                            break
-                    predicted.append(current_class-1)
+                predicted = [self.predict(student,d) for student in grades]
                 predicted
                 accuracy_ = accuracy_score(admissions,predicted)
                 f1_score_ = f1_score(admissions,predicted, average='macro')
