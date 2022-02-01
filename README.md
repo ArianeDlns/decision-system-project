@@ -77,6 +77,8 @@ main.py --model Max-SAT --csv /data6crit50ex.csv #Running a certain file placed 
 ```bash 
 .
 ├── MR-Sort-NCS.pdf # Subject of the project
+├── SDP_adalens_mmorin_lsor.pdf # Report of the project 
+├── Presentation_SDP_adalens_mmorin_lsor.pdf # Presentation of the project 
 ├── README.md
 ├── gophersat # Solver MacOSx (Monterey) (You need to add it)
 ├── gophersat.exe # Solver Windows (You need to add it)
@@ -89,8 +91,6 @@ main.py --model Max-SAT --csv /data6crit50ex.csv #Running a certain file placed 
 │   ├── generator.ipynb
 │   └──testing_performances.ipynb # Testing performances of the MR-Sort solver
 ├── requirements.txt
-├── tests
-│   └── tests.py  # Testing
 └── utils
     ├── argument.py # Handeling arguments
     └── helpers.py
