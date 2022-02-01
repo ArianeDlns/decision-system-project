@@ -7,6 +7,7 @@ from generator import GradesGenerator
 from models import MRSort_Solver, SAT_Solver, Max_SAT_Solver
 
 from utils.argument import parse_arguments
+from utils.helpers import read_data_csv
 
 if __name__ == '__main__':
     args = parse_arguments()
@@ -16,13 +17,21 @@ if __name__ == '__main__':
     nb_class = args.nb_class
     model = args.model
     seed = args.seed
+    csv = args.csv
 
-    gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise,seed=seed, nb_class=nb_class)
-    grades,admission = gen.generate_grades()
-    gen.analyze_gen()
+    if csv == '':
+        gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise,seed=seed, nb_class=nb_class)
+        grades,admission = gen.generate_grades()
+        gen.analyze_gen()
+    else:
+        grades, admission, size, nb_grades, nb_class = read_data_csv(data=args.csv)
+        gen = GradesGenerator(size=size, nb_grades=nb_grades,noise=noise, seed=seed, nb_class=nb_class)
+        gen.analyze_gen(admission)
 
     if model == 'MILP':
         MRSort_solv = MRSort_Solver(gen)
+        if csv != '':
+            MRSort_solv = MRSort_Solver(gen,grades=grades, admission=admission)
         MRSort_solv.set_constraint('MaxMin')
         MRSort_solv.solve()
         f1_score_, accuracy_, time_, error_count = MRSort_solv.get_results()

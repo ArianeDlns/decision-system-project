@@ -30,6 +30,7 @@ Our solutions will be evaluated based on:
 python3 tests/tests.py # To run tests
 python main.py # To run the full module with default arguments
 python3 main.py --size 150 --nb_grades 3 --nb_class 1 --noise 0 --model MILP --seed 99 # With specific arguments 
+main.py --model Max-SAT --csv /data6crit50ex.csv #Running a certain file placed in the data/ folder
 ```
 
 **Arguments**:

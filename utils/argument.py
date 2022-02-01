@@ -31,6 +31,10 @@ def parse_arguments():
                         default='MILP',
                         choices=['MILP', 'SAT','Max-SAT'],
                         help='Choosing the model used for prediction (default: %(default)s)')
+    parser.add_argument("-c",
+                        "--csv",
+                        default='',
+                        help='Choosing the dataset used (default: %(default)s)')
     return parser.parse_args()
 
 

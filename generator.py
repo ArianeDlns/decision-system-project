@@ -118,17 +118,20 @@ class GradesGenerator():
         admissions = self.classifier(grades)
         return grades, admissions
     
-    def analyze_gen(self):
+    def analyze_gen(self, admissions = None):
         """
         Analyze the generator
         Returns :
             None
         """
         print('---------Analyze----------')
-        print(f"Lambda: {self.lbd}")
-        print(f"Weights: {self.weights}")
-        print(f"Betas: {self.betas}")
-        grades, admissions = self.generate_grades()
+        if admissions == None:
+            print(f"Lambda: {self.lbd}")
+            print(f"Weights: {self.weights}")
+            print(f"Betas: {self.betas}")
+            grades, admissions = self.generate_grades()
+        else: 
+            admissions = admissions
         d = dict(Counter(admissions))
         print(f"Got-in: {d}")
 

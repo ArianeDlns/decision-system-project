@@ -12,12 +12,15 @@ MAX_GRADE = 21
 
 
 class MRSort_Solver:
-    def __init__(self, generator, epsilon: float = 1e-6, M: int = 1e2):
+    def __init__(self, generator, epsilon: float = 1e-6, M: int = 1e2, admission=None, grades=None):
         """
         Initialize the solver
         """
         self.gen = generator
-        self.grades, self.admission = generator.generate_grades()
+        if admission is None:
+            self.grades, self.admission = generator.generate_grades()
+        else:
+            self.grades, self.admission = np.array(grades), np.array(admission)
         self.model = Model("MR-sort")
 
         # Constants
@@ -136,8 +139,8 @@ class MRSort_Solver:
         try:
             results = ((self.grades > self.betas.X) *
                        self.weights.X).sum(axis=1) > self.lbd.X
-            f1_score_ = f1_score(self.admission, results)
-            accuracy_ = sum([results[i] == self.admission[i]
+            f1_score_ = f1_score((self.admission).astype(bool), results)
+            accuracy_ = sum([results[i] ==(self.admission).astype(bool)[i]
                             for i in range(len(results))])/len(results)
 
             if verbose == 1:
@@ -444,7 +447,7 @@ class SAT_Solver:
                 error_rate = sum(admissions != predicted)
 
             if verbose == 1:
-                print("Runed in: {:.2f} seconds ".format(t))
+                print("Ran in: {:.2f} seconds ".format(t))
                 print("Precision: {:.2f} %".format(accuracy_*100))
                 print("F1-score:  {:.2f} %".format(f1_score_*100))
                 print(f"Error rate: {error_rate} errors")
@@ -763,7 +766,7 @@ class Max_SAT_Solver:
                 error_rate = sum(admissions != predicted)
 
             if verbose == 1:
-                print("Runed in: {:.2f} seconds ".format(t))
+                print("Ran in: {:.2f} seconds ".format(t))
                 print("Precision: {:.2f} %".format(accuracy_*100))
                 print("F1-score:  {:.2f} %".format(f1_score_*100))
                 print(f"Error rate: {error_rate} errors")
